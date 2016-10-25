@@ -99,14 +99,20 @@
                 <span>T4. <b>Presentar</b> la tendencia de los costos por proveedor a lo largo del tiempo, ya sea por <i>centro gestor</i> o <i>categoria</i> (<b>Attribute</b>)</span><br>
                 <span>T5. Mostrar costos por año</span></div>
         </div>
+        <span>Para el desarrollo de la T2 se plantea la siguiente visualización: <br><br></span>
         <div class="panel panel-default col-md-12">
             <div class="panel-body">
                 <svg width="1000" height="400"></svg>
             </div>
         </div>
+        <div class="panel panel-default col-md-12">
+            <div class="panel-body" id="second">
+            </div>
+        </div>
     </div>
 </body>
 <script>
+    // Variables que se definen para el primer gráfico de barras que muestra el monto gastado por categoria
     var svg    = d3.select("svg"),
         margin = {top: 20, right: 20, bottom: 30, left: 40},
         width  = +svg.attr("width") - margin.left - margin.right,
@@ -117,16 +123,38 @@
       
     var g = svg.append("g")
                .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+    
+    // varibales que se definen para la creación del segundo grafico
+    var diameter = 500, //max size of the bubbles
+    color        = d3.scaleOrdinal(d3.schemeCategory20); //color category
 
+    /*var bubble = d3.layout.pack()
+                   .sort(null)
+                   .size([diameter, diameter])
+                   .padding(1.5);*/
+
+    var pack = d3.pack()
+                   .size([diameter, diameter])
+                   .padding(1.5);
+    
+    var svg = d3.select("#second")
+                .append("svg")
+                .attr("width", diameter)
+                .attr("height", diameter)
+                .attr("class", "bubble");
+
+    // Se realiza el llamado a la función para crear cada elemento del gráfico basado en los datos
     function update(myData){
-        x.domain(myData.map(function(d) { return d.key; }));
+        x.domain(myData.sort(function(a, b) { return b.value - a.value; }).map(function(d) { return d.key; }));
         y.domain([0, d3.max(myData, function(d) { return d.value; })]);
 
   		g.append("g")
       	 .attr("class", "axis axis--x")
       	 .attr("transform", "translate(0," + height + ")")
-         .text("Centro gestor")
-      	 .call(d3.axisBottom(x));
+         .call(d3.axisBottom(x))
+         .append("text")
+         .text("Centro gestor");
+      	 
 
         g.append("g")
       	 .attr("class", "axis axis--y")
@@ -149,16 +177,60 @@
 
     }
     
-    d3.json("prueba.json", function(err, data){
+    function update2(myData){
+        var root = d3.hierarchy({children: myData})
+                     .sum(function(d) { return d.value; })
+                     .each(function(d) {
+                        if (id = d.data.id) {
+                            var id, i = id.lastIndexOf(".");
+                            d.id = id;
+                            d.package = id.slice(0, i);
+                            d.class = id.slice(i + 1);
+                        }
+                    });
+        
+        console.log(root);
+        
+        var node = svg.selectAll(".node")
+                      .data(pack(root).leaves())
+                      .enter().append("g")
+                      .attr("class", "node")
+                      .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+
+        node.append("circle")
+            .attr("id", function(d) { return d.key; })
+            .attr("r", function(d) { return d.r; })
+            .style("fill", function(d) { return color(d.key); });
+
+        node.append("clipPath")
+            .attr("id", function(d) { return "clip-" + d.key; })
+            .append("use")
+            .attr("xlink:href", function(d) { return "#" + d.key; });
+
+        node.append("text")
+            .attr("clip-path", function(d) { return "url(#clip-" + d.id + ")"; })
+            .selectAll("tspan")
+            .data(function(d) { return d.key; })
+            .enter().append("tspan")
+            .attr("x", 0)
+            .attr("y", function(d, i, nodes) { return 13 + (i - nodes.length / 2 - 0.5) * 10; })
+            .text(function(d) { return d; });
+
+        node.append("title")
+            .text(function(d) { return d.id + "\n" + format(d.value); });
+    }
+    
+    // Lectura del archivo con los datos
+    d3.csv("data.csv", function(err, data){
       var data2 = d3.nest()
-                    .key(function(d) { return d["Ce gestor"]; })
+                    .key(function(d) { return d["Categoria"]; })
                     .rollup(function(v) { return d3.sum(v, function(d) { return d["Valor neto"]; }); })
                     .entries(data);
     
-        console.log(data2);
 
-    update(data2);
-})
+        update(data2);
+        update2(data2);
+    })
 
 /*d3.json("prueba.json", function(d) {
   //d["valor neto"] = +d["valor neto"];
