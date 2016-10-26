@@ -94,7 +94,7 @@
             <div class="panel-heading">Task (Why)</div>
             <div class="panel-body">
                 <span>T1. Tomar el presupuesto que se tiene por centro gestor para subcontrataciones y realiza comparación con el valor que se gasta en cada una.</span><br>
-                <span>T2. <b>Presentar</b> los <i>costos</i> (<b>Attribute</b>) por categoría (<b>Attribute</b>) para cada centro gestor.</span><br>
+                <span>T2. <b>Presentar</b> los <i>costos</i> (<b>Attribute</b>) por categoría (<b>Attribute</b>) para cada centro gestor en cada uno de los años.</span><br>
                 <span>T3. <b>Identificar</b> la <i>categoría</i> (<b>Attribute</b>) que más gasta (<b>Feature</b>) en subcontrataciones.</span><br>
                 <span>T4. <b>Presentar</b> la tendencia de los costos por proveedor a lo largo del tiempo, ya sea por <i>centro gestor</i> o <i>categoria</i> (<b>Attribute</b>)</span><br>
                 <span>T5. Mostrar costos por año</span></div>
@@ -176,38 +176,43 @@
         var root = d3.hierarchy({children: myData})
                      .sum(function(d) { return d.value; })
                      .each(function(d) {
-                        //if (id = d.data.id) {
-                        d.id = d.data.key;
+                         d.id       = d.data.key;
+                         if (id = d.data.key) {
+                            var name   = d.data.key.split('-'); 
+                            d.category = name[0];
+                            d.anio     = name[1];
+                         }
                         //}
                     });
         
-    
+        console.log(root);
+        
         var node = svg.selectAll(".node")
                       .data(pack(root).leaves())
                       .enter().append("g")
                       .attr("class", "node")
                       .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
 
-        console.log(node);
         
         node.append("circle")
             .attr("id", function(d) { return d.id; })
             .attr("r", function(d) { return d.r; })
-            .style("fill", function(d) { console.log(d);console.log(d.id,"-",color(d.id)); return color(d.id); });
+            .style("fill", function(d) { return color(d.category); });
 
         node.append("clipPath")
             .attr("id", function(d) { return "clip-" + d.id; })
             .append("use")
             .attr("xlink:href", function(d) { return "#" + d.id; });
 
-        /*node.append("text")
-            .attr("clip-path", function(d) { return "url(#clip-" + d.id + ")"; })
+        node.append("text")
+            .attr("clip-path", function(d) { return "url(#clip-" + d.anio + ")"; })
+            .style("font-size","10px")
             .selectAll("tspan")
-            .data(function(d) { return d.id; })
+            .data(function(d) { return d.anio; })
             .enter().append("tspan")
-            .attr("x", 0)
-            .attr("y", function(d, i, nodes) { return 13 + (i - nodes.length / 2 - 0.5) * 10; })
-            .text(function(d) { return d; });*/
+            .attr("y", 0)
+            .attr("x", function(d, i, nodes) { return 13 + (i - nodes.length / 2 - 0.5) * 10; })
+            .text(function(d) { return d; });
 
         node.append("title")
             .text(function(d) { return d.id + "\n" + d.value; });
@@ -219,10 +224,15 @@
                     .key(function(d) { return d["Categoria"]; })
                     .rollup(function(v) { return d3.sum(v, function(d) { return d["Valor neto"]; }); })
                     .entries(data);
-    
+        
+        var data3 = d3.nest()
+                    .key(function(d) { var date = d['Fecha contabilizacion'].split('/'); 
+                                       return d["Categoria"]+'-20'+date[2]; })
+                    .rollup(function(v) { return d3.sum(v, function(d) { return d["Valor neto"]; }); })
+                    .entries(data);    
 
         update(data2);
-        update2(data2);
+        update2(data3);
     })
 
 /*d3.json("prueba.json", function(d) {
