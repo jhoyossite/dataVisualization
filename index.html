@@ -105,8 +105,12 @@
                 <svg width="1000" height="400"></svg>
             </div>
         </div>
-        <div class="panel panel-default col-md-12">
+        <div class="panel panel-default col-md-6">
             <div class="panel-body" id="second">
+            </div>
+        </div>
+        <div class="panel panel-default col-md-6">
+            <div class="panel-body" id="legendSecond">
             </div>
         </div>
     </div>
@@ -123,6 +127,7 @@
       
     var g = svg.append("g")
                .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+    
     
     // varibales que se definen para la creación del segundo grafico
     var diameter = 500, //max size of the bubbles
@@ -185,26 +190,43 @@
                         //}
                     });
         
-        console.log(root);
         
         var node = svg.selectAll(".node")
                       .data(pack(root).leaves())
                       .enter().append("g")
                       .attr("class", "node")
                       .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
-
         
         node.append("circle")
             .attr("id", function(d) { return d.id; })
             .attr("r", function(d) { return d.r; })
             .style("fill", function(d) { return color(d.category); });
-
+        
         node.append("clipPath")
             .attr("id", function(d) { return "clip-" + d.id; })
             .append("use")
             .attr("xlink:href", function(d) { return "#" + d.id; });
+        
+        var legend = svg.selectAll(".legend")
+                    .data(ageNames.slice().reverse())
+                    .enter().append("g")
+                    .attr("class", "legend")
+                    .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
 
-        node.append("text")
+  legend.append("rect")
+      .attr("x", width - 18)
+      .attr("width", 18)
+      .attr("height", 18)
+      .style("fill", color);
+
+  legend.append("text")
+      .attr("x", width - 24)
+      .attr("y", 9)
+      .attr("dy", ".35em")
+      .style("text-anchor", "end")
+      .text(function(d) { return d; });
+
+        /*node.append("text")
             .attr("clip-path", function(d) { return "url(#clip-" + d.anio + ")"; })
             .style("font-size","10px")
             .selectAll("tspan")
@@ -212,7 +234,7 @@
             .enter().append("tspan")
             .attr("y", 0)
             .attr("x", function(d, i, nodes) { return 13 + (i - nodes.length / 2 - 0.5) * 10; })
-            .text(function(d) { return d; });
+            .text(function(d) { return d; });*/
 
         node.append("title")
             .text(function(d) { return d.id + "\n" + d.value; });
@@ -221,15 +243,23 @@
     // Lectura del archivo con los datos
     d3.csv("data.csv", function(err, data){
       var data2 = d3.nest()
-                    .key(function(d) { return d["Categoria"]; })
+                    .key(function(d) { return d["Procesos"]; })
                     .rollup(function(v) { return d3.sum(v, function(d) { return d["Valor neto"]; }); })
                     .entries(data);
+
+        var legendData = d3.keys(data);
         
-        var data3 = d3.nest()
+        console.log(legendData);
+    
+
+        
+      var data3 = d3.nest()
                     .key(function(d) { var date = d['Fecha contabilizacion'].split('/'); 
-                                       return d["Categoria"]+'-20'+date[2]; })
+                                       return d["Procesos"]+'-20'+date[2]; })
                     .rollup(function(v) { return d3.sum(v, function(d) { return d["Valor neto"]; }); })
-                    .entries(data);    
+                    .entries(data);  
+        
+        
 
         update(data2);
         update2(data3);
