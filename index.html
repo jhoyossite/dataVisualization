@@ -9,12 +9,23 @@
         fill: brown;
     }
 
-    .axis--x path {
+    /*.axis--x path {
         display: none;
-    }
+    }*/
     
     body{
         margin:20px;
+    }
+    
+    
+    .axis--x path {
+        display: none;
+    }
+
+    .line {
+        fill: none;
+        stroke: steelblue;
+        stroke-width: 1.5px;
     }
 </style>
 <head>
@@ -99,58 +110,78 @@
                 <span>T4. <b>Presentar</b> la tendencia de los costos por proveedor a lo largo del tiempo, ya sea por <i>centro gestor</i> o <i>categoria</i> (<b>Attribute</b>)</span><br>
                 <span>T5. Mostrar costos por año</span></div>
         </div>
-        <span>Para el desarrollo de la T2 se plantea la siguiente visualización: <br><br></span>
+        <span>Para el desarrollo de la T1 se plantea la siguiente visualización: <br><br></span>
         <div class="panel panel-default col-md-12">
             <div class="panel-body">
-                <svg width="1000" height="400"></svg>
+                <svg id="t1" width="1000" height="1000"></svg>
             </div>
         </div>
-        <div class="panel panel-default col-md-6">
+        <div class="panel panel-default col-md-12">
             <div class="panel-body" id="second">
             </div>
         </div>
-        <div class="panel panel-default col-md-6">
-            <div class="panel-body" id="legendSecond">
+        <span>Para el desarrollo de la T2 se plantea la siguiente visualización: <br><br></span>
+        <div class="panel panel-default col-md-12">
+            <div class="panel-body">
+                <svg id="t2" width="1000" height="500"></svg>    
             </div>
         </div>
     </div>
 </body>
 <script>
     // Variables que se definen para el primer gráfico de barras que muestra el monto gastado por categoria
-    var svg    = d3.select("svg"),
+    var svg    = d3.select("#t1"),
         margin = {top: 20, right: 20, bottom: 30, left: 40},
         width  = +svg.attr("width") - margin.left - margin.right,
         height = +svg.attr("height") - margin.top - margin.bottom;
 
-    var x = d3.scaleBand().rangeRound([0, width]).padding(0.1),
-        y = d3.scaleLinear().rangeRound([height, 0]);
+    var y      = d3.scaleBand().rangeRound([0, height]).padding(0.1),
+        x      = d3.scaleLinear().rangeRound([0, width]);
       
-    var g = svg.append("g")
-               .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+    var g      = svg.append("g")
+                    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
     
-    
-    // varibales que se definen para la creación del segundo grafico
-    var diameter = 500, //max size of the bubbles
+    // Variables que se definen para la creación del segundo grafico
+    var diameter = 650, //max size of the bubbles
     color        = d3.scaleOrdinal(d3.schemeCategory20c); //color category
 
-    var pack = d3.pack()
-                   .size([diameter, diameter])
-                   .padding(1.5);
+    var pack     = d3.pack()
+                     .size([diameter, diameter])
+                     .padding(1.5);
     
-    var svg = d3.select("#second")
-                .append("svg")
-                .attr("width", diameter)
-                .attr("height", diameter)
-                .attr("class", "bubble");
+    var svg      = d3.select("#second")
+                     .append("svg")
+                     .attr("width", diameter+400)
+                     .attr("height", diameter)
+                     .attr("class", "bubble");
+    
+    // Variables que se definen para la grafica 3 de la tarea 2
+    var svg2       = d3.select("#t2"),
+    margin2        = {top: 20, right: 80, bottom: 30, left: 50},
+    width2         = svg2.attr("width") - margin2.left - margin2.right,
+    height2        = svg2.attr("height") - margin2.top - margin2.bottom,
+    g2             = svg2.append("g").attr("transform", "translate(" + margin2.left + "," + margin2.top + ")");
+
+    var parseTime  = d3.timeParse("%Y%m%d");
+
+    var x2         = d3.scaleTime().range([0, width2+30]),
+        y2         = d3.scaleLinear().range([height2, 0]),
+        z2         = d3.scaleOrdinal(d3.schemeCategory10);
+
+    var line = d3.line()
+                 .curve(d3.curveBasis)
+                 .x(function(d) { return x2(parseTime(d.key))+30; })
+                 .y(function(d) { return y2(d.value); });
+    
 
     // Se realiza el llamado a la función para crear cada elemento del gráfico basado en los datos
     function update(myData){
-        x.domain(myData.sort(function(a, b) { return b.value - a.value; }).map(function(d) { return d.key; }));
-        y.domain([0, d3.max(myData, function(d) { return d.value; })]);
+        y.domain(myData.sort(function(a, b) { return b.value - a.value; }).map(function(d) { return d.key; }));
+        x.domain([0, d3.max(myData, function(d) { return d.value; })]);
 
   		g.append("g")
       	 .attr("class", "axis axis--x")
-      	 .attr("transform", "translate(0," + height + ")")
+      	 .attr("transform", "translate(30," + height + ")")
          .call(d3.axisBottom(x))
          .append("text")
          .text("Centro gestor");
@@ -158,6 +189,7 @@
 
         g.append("g")
       	 .attr("class", "axis axis--y")
+         .attr("transform", "translate(30," + 0 + ")")
       	 .call(d3.axisLeft(y))
          .append("text")
       	 .attr("transform", "rotate(-90)")
@@ -166,18 +198,21 @@
       	 .attr("text-anchor", "end")
       	 .text("Valor neto");
 
-        g.selectAll(".bar")
+        var barras = g.selectAll(".bar")
          .data(myData)
          .enter().append("rect")
       	 .attr("class", "bar")
-      	 .attr("x", function(d) {return x(d.key); })
-      	 .attr("y", function(d) {return y(d.value); })
-      	 .attr("width", x.bandwidth())
-      	 .attr("height", function(d) { return height - y(d.value); });
+      	 .attr("x", function(d) {return 30; })
+      	 .attr("y", function(d) {return y(d.key); })
+      	 .attr("height", y.bandwidth())
+      	 .attr("width", function(d) { return x(d.value); });
+        
+        barras.append("title")
+            .text(function(d) { return d.value; });
 
     }
     
-    function update2(myData){
+    function update2(myData, ageNames){
         var root = d3.hierarchy({children: myData})
                      .sum(function(d) { return d.value; })
                      .each(function(d) {
@@ -187,7 +222,6 @@
                             d.category = name[0];
                             d.anio     = name[1];
                          }
-                        //}
                     });
         
         
@@ -208,96 +242,114 @@
             .attr("xlink:href", function(d) { return "#" + d.id; });
         
         var legend = svg.selectAll(".legend")
-                    .data(ageNames.slice().reverse())
+                    .data(ageNames)
                     .enter().append("g")
                     .attr("class", "legend")
                     .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
+        
+    
+        legend.append("rect")
+              .attr("x", width - 18)
+              .attr("width", 18)
+              .attr("height", 18)
+              .style("fill", color);
 
-  legend.append("rect")
-      .attr("x", width - 18)
-      .attr("width", 18)
-      .attr("height", 18)
-      .style("fill", color);
+        legend.append("text")
+              .attr("x", width - 24)
+              .attr("y", 9)
+              .attr("dy", ".35em")
+              .style("text-anchor", "end")
+              .text(function(d) { return d; });
 
-  legend.append("text")
-      .attr("x", width - 24)
-      .attr("y", 9)
-      .attr("dy", ".35em")
-      .style("text-anchor", "end")
-      .text(function(d) { return d; });
-
-        /*node.append("text")
+        node.append("text")
             .attr("clip-path", function(d) { return "url(#clip-" + d.anio + ")"; })
             .style("font-size","10px")
             .selectAll("tspan")
-            .data(function(d) { return d.anio; })
+            .data(function(d) { if(d.r > 25) return d.anio; else return ''; })
             .enter().append("tspan")
             .attr("y", 0)
-            .attr("x", function(d, i, nodes) { return 13 + (i - nodes.length / 2 - 0.5) * 10; })
-            .text(function(d) { return d; });*/
+            .attr("x", function(d, i, nodes) { return 8 + (i - nodes.length / 2 - 0.5) * 10; })
+            .text(function(d) { return d; });
 
         node.append("title")
             .text(function(d) { return d.id + "\n" + d.value; });
     }
     
-    // Lectura del archivo con los datos
-    d3.csv("data.csv", function(err, data){
-      var data2 = d3.nest()
-                    .key(function(d) { return d["Procesos"]; })
-                    .rollup(function(v) { return d3.sum(v, function(d) { return d["Valor neto"]; }); })
-                    .entries(data);
-
-        var legendData = d3.keys(data);
+    function update3(data){
+        var cities = d3.nest()
+                       .key(function(d) { return d["Procesos"]; })
+                       .key(function(d) { return d.date; }).sortKeys(d3.ascending)
+                       .rollup(function(v) { return d3.sum(v, function(d) { return d["Valor neto"]; }); })
+                       .entries(data);
         
-        console.log(legendData);
+        x2.domain(d3.extent(data, function(d) { return parseTime(d.date); }));
+
+        y2.domain([
+                    d3.min(cities, function(c) { return d3.min(c.values, function(d) { return d.value; }); }),
+                    d3.max(cities, function(c) { return d3.max(c.values, function(d) { return d.value; }); })
+                ]);
+
+        z2.domain(cities.map(function(c) { return c.key; }));
+
+        g2.append("g")
+          .attr("class", "axis axis--x")
+          .attr("transform", "translate(30," + height2 + ")")
+          .call(d3.axisBottom(x2));
+
+        g2.append("g")
+          .attr("class", "axis axis--y")
+          .attr("transform", "translate(30," + 0 + ")")
+          .call(d3.axisLeft(y2))
+          .append("text")
+          .attr("transform", "rotate(-90)")
+          .attr("y", 6)
+          .attr("dy", "0.71em")
+          .attr("fill", "#000")
+          .text("Valor neto, $");
+
+        var city = g2.selectAll(".city")
+                    .data(cities)
+                    .enter().append("g")
+                    .attr("class", "city");
+
+        city.append("path")
+            .attr("class", "line")
+            .attr("d", function(d) { return line(d.values); })
+            .style("stroke", function(d) { return z2(d.key); });
+
+        city.append("text")
+            .datum(function(d) { return {id: d.key, value: d.values[d.values.length - 1]}; })
+            .attr("transform", function(d) { return "translate(" + x2(parseTime(d.value.key)) + "," + y2(d.value.value) + ")"; })
+            .attr("x", 3)
+            .attr("dy", "0.35em")
+            .style("font", "10px sans-serif")
+            .text(function(d) {return d.id; });
+    }
     
-
+    // Lectura del archivo con los datos, y se generan los datos necesarios para las graficas necesarias
+    // Se generan data2 (Datos para grafica de barras)
+    // se generan data3 (Datos para grafica de bubble)
+    d3.csv("data2.csv", type , function(err, data){
+        var legendData = new Array();
+        var data2      = d3.nest()
+                           .key(function(d) { if(legendData.indexOf(d["Procesos"]) == -1) legendData.push(d["Procesos"]);return d["Procesos"]; })
+                           .rollup(function(v) { return d3.sum(v, function(d) { return d["Valor neto"]; }); })
+                           .entries(data);
         
-      var data3 = d3.nest()
-                    .key(function(d) { var date = d['Fecha contabilizacion'].split('/'); 
-                                       return d["Procesos"]+'-20'+date[2]; })
-                    .rollup(function(v) { return d3.sum(v, function(d) { return d["Valor neto"]; }); })
-                    .entries(data);  
-        
+        var data3      = d3.nest()
+                           .key(function(d) {return d["Procesos"]+'-'+d['Anio']; })
+                           .rollup(function(v) { return d3.sum(v, function(d) { return d["Valor neto"]; }); })
+                           .entries(data);  
         
 
         update(data2);
-        update2(data3);
-    })
+        update2(data3, legendData);
+        update3(data);
+    });
+    
+    function type(d, _, columns) {
+        d.date = d['Fecha contabilizacion'];
+        return d;
+    }
 
-/*d3.json("prueba.json", function(d) {
-  //d["valor neto"] = +d["valor neto"];
-  console.log(d);
-  return d;
-}, function(error, data) {
-  if (error) throw error;
-	console.log(data);
-  x.domain(data.map(function(d) { return d.letter; }));
-  y.domain([0, d3.max(data, function(d) { return d.frequency; })]);
-
-  g.append("g")
-      .attr("class", "axis axis--x")
-      .attr("transform", "translate(0," + height + ")")
-      .call(d3.axisBottom(x));
-
-  g.append("g")
-      .attr("class", "axis axis--y")
-      .call(d3.axisLeft(y).ticks(10, "%"))
-    .append("text")
-      .attr("transform", "rotate(-90)")
-      .attr("y", 6)
-      .attr("dy", "0.71em")
-      .attr("text-anchor", "end")
-      .text("Frequency");
-
-  g.selectAll(".bar")
-    .data(data)
-    .enter().append("rect")
-      .attr("class", "bar")
-      .attr("x", function(d) { return x(d.letter); })
-      .attr("y", function(d) { return y(d.frequency); })
-      .attr("width", x.bandwidth())
-      .attr("height", function(d) { return height - y(d.frequency); });
-});*/
-
-  </script>
+</script>
