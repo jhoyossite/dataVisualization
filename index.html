@@ -218,10 +218,15 @@
         <span>Para el desarrollo de la T2 se plantea la siguiente visualización: <br><br></span>
         <div class="panel panel-default col-md-12">
             <div class="panel-body">
-                <div class="form-group col-md-4">
-                    <label>Filtrar por proceso:</label>
-                    <select id="procesos" class="form-control input-sm">
-                    </select>
+                <div class="form-group col-md-12">
+                    <div class="col-md-4">
+                        <span>Con el fin de visualizar más detalles se permite visualizar cada proceso por separado:</span>
+                    </div>
+                    <div class="col-md-6">
+                        <select id="procesos" class="form-control input-sm">
+                            <option value="">Todos</option>
+                        </select>
+                    </div>
                 </div>
                 <svg id="t2" width="1000" height="500"></svg> 
             </div>
@@ -452,7 +457,7 @@
             .attr("x", 3)
             .attr("dy", "0.35em")
             .style("font", "10px sans-serif")
-            .text(function(d) {d3.select("#procesos").append("option").attr("value",d.id).text(d.id);return d.id; });
+            .text(function(d) {d3.select("#procesos").append("option").attr("value",d.id).text(d.id);return "";/*d.id;*/ });
         
         // handle on click event
         d3.select('#procesos')
@@ -460,7 +465,11 @@
                 var value = this.value;
                 svg2.selectAll(".city path").remove();
                 svg2.selectAll(".city text").remove();
-                dataFiltered = data3.filter(function (d) { return d.key == value });
+                if(value != '')
+                    dataFiltered = data3.filter(function (d) { return d.key == value });
+                else
+                    dataFiltered = data3;
+            
                 update3(dataFiltered, dataInit);
             });
     }
