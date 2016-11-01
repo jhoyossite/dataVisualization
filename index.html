@@ -123,7 +123,12 @@
         <span>Para el desarrollo de la T2 se plantea la siguiente visualización: <br><br></span>
         <div class="panel panel-default col-md-12">
             <div class="panel-body">
-                <svg id="t2" width="1000" height="500"></svg>    
+                <div class="form-group col-md-4">
+                    <label>Filtrar por proceso:</label>
+                    <select id="procesos" class="form-control input-sm">
+                    </select>
+                </div>
+                <svg id="t2" width="1000" height="500"></svg> 
             </div>
         </div>
     </div>
@@ -173,6 +178,8 @@
                  .x(function(d) { return x2(parseTime(d.key))+30; })
                  .y(function(d) { return y2(d.value); });
     
+    var data3    = false;
+    var dataInit = false;
 
     // Se realiza el llamado a la función para crear cada elemento del gráfico basado en los datos
     function update(myData){
@@ -275,13 +282,17 @@
             .text(function(d) { return d.id + "\n" + d.value; });
     }
     
-    function update3(data){
-        var cities = d3.nest()
-                       .key(function(d) { return d["Procesos"]; })
-                       .key(function(d) { return d.date; }).sortKeys(d3.ascending)
-                       .rollup(function(v) { return d3.sum(v, function(d) { return d["Valor neto"]; }); })
-                       .entries(data);
-        
+    var cityInit = false;
+
+    var yAxis = g2.append("g")
+                  .attr("class", "axis axis--y")
+                  .attr("transform", "translate(30," + 0 + ")");
+    
+    var xAxis =  g2.append("g")
+                   .attr("class", "axis axis--x")
+                   .attr("transform", "translate(30," + height2 + ")");
+    
+    function update3(cities, data){
         x2.domain(d3.extent(data, function(d) { return parseTime(d.date); }));
 
         y2.domain([
@@ -291,60 +302,73 @@
 
         z2.domain(cities.map(function(c) { return c.key; }));
 
-        g2.append("g")
-          .attr("class", "axis axis--x")
-          .attr("transform", "translate(30," + height2 + ")")
-          .call(d3.axisBottom(x2));
+        cityInit = g2.selectAll(".city")
+                         .data(cities);
+        
+        cityEnter = cityInit.enter().append("g");
+        
+        cityInit.merge(cityEnter)
+                .attr("class", "city")
+                .append("path")
+                .attr("class", "line")
+                .attr("d", function(d) { return line(d.values); })
+                .style("stroke", function(d) { return z2(d.key); });
+        
+        cityInit.exit().remove();
+        
+        xAxis.call(d3.axisBottom(x2));
+        
+        yAxis.call(d3.axisLeft(y2))
+             .append("text")
+             .attr("transform", "rotate(-90)")
+             .attr("y", 6)
+             .attr("dy", "0.71em")
+             .attr("fill", "#000")
+             .text("Valor neto, $");
 
-        g2.append("g")
-          .attr("class", "axis axis--y")
-          .attr("transform", "translate(30," + 0 + ")")
-          .call(d3.axisLeft(y2))
-          .append("text")
-          .attr("transform", "rotate(-90)")
-          .attr("y", 6)
-          .attr("dy", "0.71em")
-          .attr("fill", "#000")
-          .text("Valor neto, $");
-
-        var city = g2.selectAll(".city")
-                    .data(cities)
-                    .enter().append("g")
-                    .attr("class", "city");
-
-        city.append("path")
-            .attr("class", "line")
-            .attr("d", function(d) { return line(d.values); })
-            .style("stroke", function(d) { return z2(d.key); });
-
-        city.append("text")
+        cityEnter.append("text")
             .datum(function(d) { return {id: d.key, value: d.values[d.values.length - 1]}; })
             .attr("transform", function(d) { return "translate(" + x2(parseTime(d.value.key)) + "," + y2(d.value.value) + ")"; })
             .attr("x", 3)
             .attr("dy", "0.35em")
             .style("font", "10px sans-serif")
-            .text(function(d) {return d.id; });
+            .text(function(d) {d3.select("#procesos").append("option").attr("value",d.id).text(d.id);return d.id; });
+        
+        // handle on click event
+        d3.select('#procesos')
+            .on('change', function() {
+                var value = this.value;
+                dataFiltered = data3.filter(function (d) { return d.key === value });
+                console.log(dataFiltered);
+                update3(dataFiltered, dataInit);
+            });
     }
     
     // Lectura del archivo con los datos, y se generan los datos necesarios para las graficas necesarias
     // Se generan data2 (Datos para grafica de barras)
     // se generan data3 (Datos para grafica de bubble)
     d3.csv("data2.csv", type , function(err, data){
+        var dataInit   = data;
         var legendData = new Array();
-        var data2      = d3.nest()
+        var data1      = d3.nest()
                            .key(function(d) { if(legendData.indexOf(d["Procesos"]) == -1) legendData.push(d["Procesos"]);return d["Procesos"]; })
                            .rollup(function(v) { return d3.sum(v, function(d) { return d["Valor neto"]; }); })
                            .entries(data);
         
-        var data3      = d3.nest()
+        var data2      = d3.nest()
                            .key(function(d) {return d["Procesos"]+'-'+d['Anio']; })
                            .rollup(function(v) { return d3.sum(v, function(d) { return d["Valor neto"]; }); })
                            .entries(data);  
         
+        data3      = d3.nest()
+                           .key(function(d) { return d["Procesos"]; })
+                           .key(function(d) { return d.date; }).sortKeys(d3.ascending)
+                           .rollup(function(v) { return d3.sum(v, function(d) { return d["Valor neto"]; }); })
+                           .entries(data);
 
-        update(data2);
-        update2(data3, legendData);
-        update3(data);
+        update(data1);
+        update2(data2, legendData);
+        update3(data3, data);
     });
     
     function type(d, _, columns) {
