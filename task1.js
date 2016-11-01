@@ -17,7 +17,8 @@
     var arColor = d3.scaleOrdinal()
         .range(["#FF6D19", "#00B2B0"]);
     
-    var metric=2014;
+    var metric=2014,
+        arNamesLegends = [];
 
     var loadData = function() {
         metric = document.getElementById('metric').selectedOptions[0].text;
@@ -53,16 +54,13 @@
             .key(function(d){ return d.Proceso })
             .entries(data)
 
+        for (var name in nested[0].value){
+            arNamesLegends.push(name);
+        }
+
         nested = nested.filter(function(element){
             return element.value !== undefined;
         });
-
-        /*for (var j = 0; j < nested.length; j++) {
-            if (nested[j].value === null) {
-                nested.splice(j,1);
-                j--;
-            }
-        }*/
 
         nested.forEach(function(d){
             d.age = Object.keys(d.value).map(function(key){
@@ -115,6 +113,27 @@
 
         yScale.domain([0, yMax]).range([chartHeight, 0])
 
+
+        var legendTask1 = obSvg.selectAll(".legendTask1")
+                    .data(ageNames)
+                    .enter().append("g")
+                    .attr("class", "legendTask1")
+                    .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
+        
+    
+        legendTask1.append("rect")
+              .attr("x", width - 58)
+              .attr("width", 18)
+              .attr("height", 18)
+              .style("fill", arColor);
+
+        legendTask1.append("text")
+              .attr("x", width - 64)
+              .attr("y", 9)
+              .attr("dy", ".35em")
+              .style("text-anchor", "end")
+              .text(function(d) { return d; });
+
             
     }
     
@@ -149,6 +168,11 @@
        bar.merge(newBar).transition(t)
             .attr("height", function(d) { return chartHeight - yScale(d.value); })
             .attr("transform", function(d) { return "translate(" + [xInScale(d.key), yScale(d.value)] + ")" })
+
+        bar.merge(newBar).append("title")
+            .text(function(d) {
+                return d.key + "\n" + formatNumber.new(d.value, "$");
+            });
     }
     
     function drawAxis(){
