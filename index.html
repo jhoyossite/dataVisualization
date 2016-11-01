@@ -413,6 +413,7 @@
                    .attr("transform", "translate(30," + height2 + ")");
     
     function update3(cities, data){
+        console.log(data);
         x2.domain(d3.extent(data, function(d) { return parseTime(d.date); }));
 
         y2.domain([
@@ -468,7 +469,7 @@
     // Se generan data2 (Datos para grafica de barras)
     // se generan data3 (Datos para grafica de bubble)
     d3.csv("data2.csv", type , function(err, data){
-        var dataInit   = data;
+        dataInit   = data;
         var legendData = new Array();
         var data1      = d3.nest()
                            .key(function(d) { if(legendData.indexOf(d["Procesos"]) == -1) legendData.push(d["Procesos"]);return d["Procesos"]; })
