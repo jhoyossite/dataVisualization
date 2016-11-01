@@ -27,6 +27,15 @@
         stroke: steelblue;
         stroke-width: 1.5px;
     }
+
+    #graph {
+    width: 900px;
+    height: 500px;
+    }
+    .tick line {
+        stroke-dasharray: 2 2 ;
+        stroke: #ccc;
+    }
 </style>
 <head>
     <meta charset="utf-8">
@@ -112,6 +121,16 @@
         </div>
         <span>Para el desarrollo de la T1 se plantea la siguiente visualización: <br><br></span>
         <div class="panel panel-default col-md-12">
+            <select onchange="loadData()" id="metric">
+              <option >2014</option>
+              <option >2015</option>
+              <option >2016</option>
+            </select>
+            <div class="panel-body" id="graph">   
+            </div>
+        </div>
+        <span>Para el desarrollo de la T1 se plantea la siguiente visualización: <br><br></span>
+        <div class="panel panel-default col-md-12">
             <div class="panel-body">
                 <svg id="t1" width="1000" height="1000"></svg>
             </div>
@@ -133,6 +152,7 @@
         </div>
     </div>
 </body>
+<script src="task1.js"></script>
 <script>
     // Variables que se definen para el primer gráfico de barras que muestra el monto gastado por categoria
     var svg    = d3.select("#t1"),
