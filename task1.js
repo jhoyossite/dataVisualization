@@ -1,9 +1,9 @@
     var nuWidth,nuHeight
     var chartWidth, chartHeight
     var obMargin
-    var svg = d3.select("#graph").append("svg")
-    var axisLayer = svg.append("g").classed("axisLayer", true)
-    var chartLayer = svg.append("g").classed("chartLayer", true)
+    var obSvg = d3.select("#graph").append("svg")
+    var axisLayer = obSvg.append("g").classed("axisLayer", true)
+    var chartLayer = obSvg.append("g").classed("chartLayer", true)
     
     
     var xScale = d3.scaleBand()
@@ -18,10 +18,11 @@
         .range(["#5DDEC9", "#EF64AD"]);
     
     var metric=2014;
+
     var loadData = function() {
-    metric = document.getElementById('metric').selectedOptions[0].text;
-    d3.csv("presupuesto.csv", cast,  main)
-    console.log(metric);
+        metric = document.getElementById('metric').selectedOptions[0].text;
+        d3.csv("presupuesto.csv", cast,  main)
+        console.log(metric);
     }
     
     function cast(d) {
@@ -84,7 +85,9 @@
         chartWidth = nuWidth - (obMargin.left+obMargin.right)
         chartHeight = nuHeight - (obMargin.top+obMargin.bottom)
         
-        svg.attr("width", nuWidth+10).attr("height", nuHeight)
+        obSvg.attr("width", nuWidth+10)
+            .attr("height", nuHeight)
+            .attr("class", "sizeSvg")
         
         axisLayer.attr("width", nuWidth+10).attr("height", nuHeight)
         

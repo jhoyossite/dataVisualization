@@ -28,8 +28,8 @@
         stroke-width: 1.5px;
     }
 
-    #graph {
-    width: 900px;
+    #graph, .sizeSvg {
+    width: 910px;
     height: 500px;
     }
     .tick line {
@@ -121,11 +121,16 @@
         </div>
         <span>Para el desarrollo de la T1 se plantea la siguiente visualización: <br><br></span>
         <div class="panel panel-default col-md-12">
-            <select onchange="loadData()" id="metric">
+            <select class="toogleBtn" onchange="loadData()" id="metric">
               <option >2014</option>
               <option >2015</option>
               <option >2016</option>
             </select>
+            <div class="btn-group tootleBtn" role="group" aria-label="Basic example">
+              <button type="button" class="btn btn-secondary">2014</button>
+              <button type="button" class="btn btn-secondary">2015</button>
+              <button type="button" class="btn btn-secondary">2016</button>
+            </div>
             <div class="panel-body" id="graph">   
             </div>
         </div>
