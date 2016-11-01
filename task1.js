@@ -21,7 +21,7 @@
 
     var loadData = function() {
         metric = document.getElementById('metric').selectedOptions[0].text;
-        d3.csv("presupuesto.csv", cast,  main)
+        d3.csv("Tarea1anos.csv", cast,  main)
         console.log(metric);
     }
     
@@ -85,16 +85,16 @@
         chartWidth = nuWidth - (obMargin.left+obMargin.right)
         chartHeight = nuHeight - (obMargin.top+obMargin.bottom)
         
-        obSvg.attr("width", nuWidth+10)
+        obSvg.attr("width", nuWidth+3)
             .attr("height", nuHeight)
             .attr("class", "sizeSvg")
         
-        axisLayer.attr("width", nuWidth+10).attr("height", nuHeight)
+        axisLayer.attr("width", nuWidth+3).attr("height", nuHeight)
         
         chartLayer
             .attr("width", chartWidth)
             .attr("height", chartHeight)
-            .attr("transform", "translate("+[obMargin.left+10, obMargin.top]+")")
+            .attr("transform", "translate("+[obMargin.left+3, obMargin.top]+")")
             
         
                 
