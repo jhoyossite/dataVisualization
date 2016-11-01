@@ -233,6 +233,7 @@
         </div>
     </div>
 </body>
+<script src="utilitarios.js"></script>
 <script src="task1.js"></script>
 <script>
     // Variables que se definen para el primer gráfico de barras que muestra el monto gastado por categoria
@@ -316,7 +317,7 @@
       	 .attr("width", function(d) { return x(d.value); });
         
         barras.append("title")
-            .text(function(d) { return d.value; });
+            .text(function(d) { return formatNumber.new(d.value, "$"); });
 
     }
     
@@ -380,7 +381,7 @@
             .text(function(d) { return d; });
 
         node.append("title")
-            .text(function(d) { return d.id + "\n" + d.value; });
+            .text(function(d) { return d.id + "\n" + formatNumber.new(d.value, "$"); });
     }
     
     var cityInit = false;
