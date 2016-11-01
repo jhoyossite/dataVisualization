@@ -1,25 +1,17 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
 <style>
-    .bar {
+    /*.bar {
         fill: steelblue;
-    }
+    }*/
 
     .bar:hover {
         fill: brown;
+        
     }
-
-    /*.axis--x path {
-        display: none;
-    }*/
     
     body{
         margin:20px;
-    }
-    
-    
-    .axis--x path {
-        display: none;
     }
 
     .line {
@@ -29,9 +21,10 @@
     }
 
     #graph, .sizeSvg {
-    width: 910px;
-    height: 500px;
+        width: 910px;
+        height: 500px;
     }
+    
     .tick line {
         stroke-dasharray: 2 2 ;
         stroke: #ccc;
@@ -70,7 +63,7 @@
             <div class="panel-heading"><b>About the data (What)</b></div>
             <div class="panel-body"> Las bases de datos bajo estudio son tablas estaticas, cuyas filas estan relacionados con atributos especificos. A continuacion se muestra la descripcion de los mismos.<br>
             <br>
-            <hr><b>Base de datos uno: Costos Causados</B></hr></b>
+            <hr><b>Base de datos uno: Costos Causados</b><br><br>
               <div class="table-responsive">
                 <table class="table table-condensed">
                   <thead>
@@ -85,11 +78,13 @@
                       <td>Fecha Contabilización</td>
                       <td>Cuantitativo Incremental</td>
                       <td>Fecha en la que se causó cada registro que pertenece a un servicio prestado por un contratista.</td>
-                      <tr>
-                    <td>Semana</td>
+                    </tr>
+                    <tr>
+                      <td>Semana</td>
                       <td>Cuantitativo Incremental</td>
                       <td>Determina el número de la semana en la que se causó el servicio.</td>
                     </tr>
+                    <tr>
                       <td>Mes</td>
                       <td>Cuantitativo Incremental</td>
                       <td>Determina el número del mes en el que se causó el servicio.</td>
@@ -147,7 +142,7 @@
                   </tbody>
                 </table>
               </div>
-            <hr><b>Base de datos dos: Presupuesto</B></hr></b>
+            <hr><b>Base de datos dos: Presupuesto</b><br><br>
             <div class="table-responsive">
                 <table class="table table-condensed">
                   <thead>
@@ -281,6 +276,7 @@
     
     var data3    = false;
     var dataInit = false;
+    var checked  = '';
 
     // Se realiza el llamado a la función para crear cada elemento del gráfico basado en los datos
     function update(myData){
@@ -312,13 +308,34 @@
       	 .attr("class", "bar")
       	 .attr("x", function(d) {return 30; })
       	 .attr("y", function(d) {return y(d.key); })
+         .attr("id", function(d) {return d.key;})
       	 .attr("height", y.bandwidth())
-      	 .attr("width", function(d) { return x(d.value); });
+      	 .attr("width", function(d) { return x(d.value); })
+         .style("fill", function(d) { return color(d.key); });
         
         barras.append("title")
-            .text(function(d) { return d.value; });
+            .text(function(d) { return d.key+"\nValor neto total: "+d.value; });
+        
+        barras.on("mouseover", function(d) {
+            d3.select(this).style("fill", "brown");
+        });                  
+
+        barras.on("mouseout", function(d) {
+            d3.select(this).style("fill", function(d){return color(d.key)});
+        });
+        
+        barras.on("click", function() {
+            if(checked != this.id)
+                checked   = this.id;
+            else
+                checked   = '';
+            node.attr('opacity',function(d){if(d.category == checked || checked == '') return "1"; else return "0.1";});
+            barras.attr('opacity',function(d){console.log(d);if(d.key == checked || checked == '') return "1"; else return "0.1";});
+        });
 
     }
+    
+    var node = false
     
     function update2(myData, ageNames){
         var root = d3.hierarchy({children: myData})
@@ -333,10 +350,10 @@
                     });
         
         
-        var node = svg.selectAll(".node")
+        node = svg.selectAll(".node")
                       .data(pack(root).leaves())
                       .enter().append("g")
-                      .attr("class", "node")
+                      .attr("class", function(d){return "node "+d.id;})
                       .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
         
         node.append("circle")
@@ -380,7 +397,7 @@
             .text(function(d) { return d; });
 
         node.append("title")
-            .text(function(d) { return d.id + "\n" + d.value; });
+            .text(function(d) { return d.id + "\nValor neto total: " + d.value; });
     }
     
     var cityInit = false;
