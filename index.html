@@ -55,68 +55,137 @@
 <body>
     <div class="container"style="margin-top:40px;">
         <div class="jumbotron">
-            <h1>Data visualization</h1>
-            <p>Realizar una visualización basado en la base de datos de costos de proveedores a lo largo del tiempo en la empresa XXXXX S.A.</p>
+            <h1>Costos de Mantenimiento</h1>
+            <p>Visualización a partir de los costos causados por concepto de mantenimiento en los años 2014, 2015 y 2016 (Hasta el mes de Septiembre) en una empresa de la región.</p>
+
+            <p ALIGN=right><font size=2>Elaborado por:<br> Juan Diego Castaño Villada <br> Jhon Darwin Jaramillo Betancur <br> Jhaderson Hoyos Sanchez <br> Cristhian Darío Grajales Echverri</font></p>
+        </div>
+      
+
+        <div class="panel panel-default">
+            <div class="panel-heading"><b>Goal</b></div>
+            <div class="panel-body">Mostrar los costos de mantenimiento de la empresa de tal manera que se puedan tomar decisiones estratégicas en el comité de compras.</div>
         </div>
         <div class="panel panel-default">
-            <div class="panel-heading">Goal</div>
-            <div class="panel-body">Presentar</div>
-        </div>
-        <div class="panel panel-default">
-            <div class="panel-heading">About the data (What)</div>
-            <div class="panel-body"> La base de datos bajo estudio es una tabla estatica, cuyas filas estan relacionados con atributos especificos. A continuacion se muestra la descripcion de los mismos:
+            <div class="panel-heading"><b>About the data (What)</b></div>
+            <div class="panel-body"> Las bases de datos bajo estudio son tablas estaticas, cuyas filas estan relacionados con atributos especificos. A continuacion se muestra la descripcion de los mismos.<br>
+            <br>
+            <hr><b>Base de datos uno: Costos Causados</B></hr></b>
               <div class="table-responsive">
                 <table class="table table-condensed">
                   <thead>
                     <tr>
                       <th>Nombre del Atributo</th>
                       <th>Tipo de Atributo</th>
+                      <th>Descripción</th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr>
-                      <td>Fecha Contabilizacion</td>
+                      <td>Fecha Contabilización</td>
                       <td>Cuantitativo Incremental</td>
+                      <td>Fecha en la que se causó cada registro que pertenece a un servicio prestado por un contratista.</td>
+                      <tr>
+                    <td>Semana</td>
+                      <td>Cuantitativo Incremental</td>
+                      <td>Determina el número de la semana en la que se causó el servicio.</td>
+                    </tr>
+                      <td>Mes</td>
+                      <td>Cuantitativo Incremental</td>
+                      <td>Determina el número del mes en el que se causó el servicio.</td>
+                    </tr>
+                    <tr>
+                      <td>Ano</td>
+                      <td>Cuantitativo Incremental</td>
+                      <td>Determina el año en el que se causó el servicio.</td>
                     </tr>
                     <tr>
                       <td>Proveedor</td>
-                      <td>Categorico</td>
+                      <td>Categórico</td>
+                      <td>Código de cada proveedor de servicio.</td>
                     </tr>
                     <tr>
                       <td>Categoria</td>
-                      <td>Categorico</td>
+                      <td>Categórico</td>
+                      <td>Determina el tipo de mantenimiento realizado.</td>
                     </tr>
                     <tr>
                       <td>Procesos</td>
-                      <td>Categorico</td>
+                      <td>Categórico</td>
+                      <td>Determina a qué proceso de la empresa se ha cargado el costo causado</td>
                     </tr>
                     <tr>
                       <td>Servicios</td>
-                      <td>Categorico</td>
+                      <td>Categórico</td>
+                      <td>Es el código que permite identificar cada posible servicio de mantenimiento. </td>
                     </tr>
                     <tr>
                       <td>Valor Neto</td>
                       <td>Cuantitativo Secuencial</td>
+                      <td>Es el valor en pesos ($) causado en cada uno servicios causados.</td>
                     </tr>
                     <tr>
                       <td>Cantidad</td>
                       <td>Cuantitativo Secuencial</td>
+                      <td>Representa el número de veces que se realizó el servicio por registro.</td>
                     </tr>
                     <tr>
                       <td>UMB</td>
                       <td>Cuantitativo Secuencial</td>
+                      <td>Es la unidad de medida en la que se causó cada servicio.</td>
                     </tr>
                     <tr>
                       <td>Texto Breve</td>
-                      <td>Categorico</td>
+                      <td>Categórico</td>
+                      <td>Es el detalle del Textro Breve del Servicio indicando información adicional.</td>
                     </tr>
                     <tr>
                       <td>Texto Breve Servicio</td>
-                      <td>Categorico</td>
+                      <td>Categórico</td>
+                      <td>Describe el servicio causado en cada registro.</td>
                     </tr>
                   </tbody>
                 </table>
-              </div> 
+              </div>
+            <hr><b>Base de datos dos: Presupuesto</B></hr></b>
+            <div class="table-responsive">
+                <table class="table table-condensed">
+                  <thead>
+                    <tr>
+                      <th>Nombre del Atributo</th>
+                      <th>Tipo de Atributo</th>
+                      <th>Descripción</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Procesos</td>
+                      <td>Categórico</td>
+                      <td>Determina a qué proceso de la empresa se ha cargado el costo causado</td>
+                    </tr>
+                    <tr>
+                      <td>Categoria</td>
+                      <td>Categórico</td>
+                      <td>Determina el tipo de mantenimiento realizado.</td>
+                    </tr>
+                    <tr>
+                      <td>Mes</td>
+                      <td>Cuantitativo Incremental</td>
+                      <td>Determina el número del mes a la que pertenece el valor del presupuesto.</td>
+                    </tr>
+                    <tr>
+                      <td>Ano</td>
+                      <td>Cuantitativo Incremental</td>
+                      <td>Determina el año al que pertenece el valor del presupuesto.</td>
+                    </tr>
+                    <tr>
+                      <td>Presupuesto</td>
+                      <td>Cuantitativo Secuencial</td>
+                      <td>Es el valor en pesos ($) determinado en la planeación estrategica para cada combinación de mes, año, proceso y categoría.</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
             </div>
         </div>
         <div class="panel panel-default">
