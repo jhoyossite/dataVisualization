@@ -413,7 +413,6 @@
                    .attr("transform", "translate(30," + height2 + ")");
     
     function update3(cities, data){
-        console.log(data);
         x2.domain(d3.extent(data, function(d) { return parseTime(d.date); }));
 
         y2.domain([
@@ -459,8 +458,9 @@
         d3.select('#procesos')
             .on('change', function() {
                 var value = this.value;
-                dataFiltered = data3.filter(function (d) { return d.key === value });
-                console.log(dataFiltered);
+                svg2.selectAll(".city path").remove();
+                svg2.selectAll(".city text").remove();
+                dataFiltered = data3.filter(function (d) { return d.key == value });
                 update3(dataFiltered, dataInit);
             });
     }
