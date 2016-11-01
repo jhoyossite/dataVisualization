@@ -36,6 +36,15 @@
         stroke-dasharray: 2 2 ;
         stroke: #ccc;
     }
+    .selectdiv {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 20px 0;
+    }
+    .selectdiv span {
+      padding-right: 10px;
+    }
 </style>
 <head>
     <meta charset="utf-8">
@@ -121,15 +130,13 @@
         </div>
         <span>Para el desarrollo de la T1 se plantea la siguiente visualización: <br><br></span>
         <div class="panel panel-default col-md-12">
-            <select class="toogleBtn" onchange="loadData()" id="metric">
-              <option >2014</option>
-              <option >2015</option>
-              <option >2016</option>
-            </select>
-            <div class="btn-group tootleBtn" role="group" aria-label="Basic example">
-              <button type="button" class="btn btn-secondary">2014</button>
-              <button type="button" class="btn btn-secondary">2015</button>
-              <button type="button" class="btn btn-secondary">2016</button>
+            <div class="selectdiv">
+              <span>Seleccione un año para observar el valor presupuesto contra el gasto</span>
+              <select class="form-control input-sm" onchange="loadData()" id="metric">
+                <option >2014</option>
+                <option >2015</option>
+                <option >2016</option>
+              </select>
             </div>
             <div class="panel-body" id="graph">   
             </div>
