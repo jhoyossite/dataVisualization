@@ -15,7 +15,7 @@
     var yScale = d3.scaleLinear()
     
     var arColor = d3.scaleOrdinal()
-        .range(["#5DDEC9", "#EF64AD"]);
+        .range(["#FF6D19", "#00B2B0"]);
     
     var metric=2014;
 
@@ -134,10 +134,10 @@
             .attr("transform", function(d) { return "translate(" + [xScale(d.key), 0] + ")"; });
 
         
-        var bar = newCountry.selectAll(".bar")
+        var bar = newCountry.selectAll(".barTasks")
             .data(function(d){ return d.age })
 
-        var newBar = bar.enter().append("rect").attr("class", "bar")
+        var newBar = bar.enter().append("rect").attr("class", "barTasks")
 
                         
         bar.merge(newBar)
@@ -146,9 +146,6 @@
             .attr("fill", function(d) { return arColor(d.key); })
             .attr("transform", function(d) { return "translate(" + [xInScale(d.key), chartHeight] + ")" })
 
-        
-        
-        //アニメーション
        bar.merge(newBar).transition(t)
             .attr("height", function(d) { return chartHeight - yScale(d.value); })
             .attr("transform", function(d) { return "translate(" + [xInScale(d.key), yScale(d.value)] + ")" })
