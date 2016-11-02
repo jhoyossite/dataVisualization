@@ -69,8 +69,9 @@
         });
 
         nested.forEach(function(d){
+            var proceso = d.key;
             d.age = Object.keys(d.value).map(function(key){
-                return {key:key, value:d.value[key]}
+                return {proceso: proceso, key:key, value:d.value[key]}
             })
         })
 
@@ -106,13 +107,16 @@
         nested = nested.filter(function(element){
             return element.value !== undefined;
         });
+        
+        console.log(nested);
 
         nested.forEach(function(d){
+            var proceso = d.key;
             d.age = Object.keys(d.value).map(function(key){
-                return {key:key, value:d.value[key]}
+                return {proceso: proceso,key:key, value:d.value[key]}
             })
-        })
-
+        });
+        
         setSizeMeses(nested)
         drawAxisMeses()
         drawChartMeses(nested)    
@@ -273,6 +277,7 @@
         bar.merge(newBar)
             .attr("width", xInScale.bandwidth())
             .attr("height", 0)
+            .attr("id", function(d){console.log(d);return "Proceso "+d.proceso;})
             .attr("fill", function(d) { return arColor(d.key); })
             .attr("transform", function(d) { return "translate(" + [xInScale(d.key), chartHeight] + ")" })
 
@@ -285,10 +290,11 @@
                 return d.key + "\n" + formatNumber.new(d.value, "$");
             });
 
-        bar.merge(newBar).on("click", function (obSelect, nuPos, arTarget) {
-            var elemento = arTarget[0],
-                sbNameProcess = elemento.getAttribute('class');
-
+        bar.merge(newBar).on("click", function () {
+            //var elemento = arTarget[0],
+            //sbNameProcess = elemento.getAttribute('id');
+            //console.log(sbNameProcess);
+            loadDataMeses(this.id);
             console.log("aqui deberia de llamar a loadDataMeses() con el nuevo proceso ");
         });
     }
