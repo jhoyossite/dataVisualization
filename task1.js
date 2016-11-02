@@ -5,7 +5,7 @@
     var axisLayer = obSvg.append("g").classed("axisLayer", true)
     var chartLayer = obSvg.append("g").classed("chartLayer", true) 
 
-    var obSvgMeses = d3.select("#graphTask2").append("svg")
+    var obSvgMeses = d3.select("#graphTask2").style("display","none").append("svg")
     var axisLayerMeses = obSvgMeses.append("g").classed("axisLayer", true)
     var chartLayerMeses = obSvgMeses.append("g").classed("chartLayer", true)    
     
@@ -108,7 +108,6 @@
             return element.value !== undefined;
         });
         
-        console.log(nested);
 
         nested.forEach(function(d){
             var proceso = d.key;
@@ -171,13 +170,13 @@
         
     
         legendTask1.append("rect")
-              .attr("x", width - 58)
+              .attr("x", width + 68)
               .attr("width", 18)
               .attr("height", 18)
               .style("fill", arColor);
 
         legendTask1.append("text")
-              .attr("x", width - 64)
+              .attr("x", width + 64)
               .attr("y", 9)
               .attr("dy", ".35em")
               .style("text-anchor", "end")
@@ -235,13 +234,13 @@
         
     
         legendTask1.append("rect")
-              .attr("x", width - 58)
+              .attr("x", width + 68)
               .attr("width", 18)
               .attr("height", 18)
               .style("fill", arColor);
 
         legendTask1.append("text")
-              .attr("x", width - 64)
+              .attr("x", width + 64)
               .attr("y", 9)
               .attr("dy", ".35em")
               .style("text-anchor", "end")
@@ -249,6 +248,8 @@
 
             
     }
+    
+    var checked2 = '';
     
     function drawChart(nested) {
         var t = d3.transition()
@@ -277,7 +278,7 @@
         bar.merge(newBar)
             .attr("width", xInScale.bandwidth())
             .attr("height", 0)
-            .attr("id", function(d){console.log(d);return "Proceso "+d.proceso;})
+            .attr("id", function(d){return "Proceso "+d.proceso;})
             .attr("fill", function(d) { return arColor(d.key); })
             .attr("transform", function(d) { return "translate(" + [xInScale(d.key), chartHeight] + ")" })
 
@@ -289,13 +290,36 @@
             .text(function(d) {
                 return d.key + "\n" + formatNumber.new(d.value, "$");
             });
+        
+        bar.merge(newBar).on("mouseover", function(d) {
+            d3.select(this).style("fill", "brown");
+        });                  
+
+        bar.merge(newBar).on("mouseout", function(d) {
+            d3.select(this).style("fill", function(d){return arColor(d.key)});
+        });
 
         bar.merge(newBar).on("click", function () {
             //var elemento = arTarget[0],
             //sbNameProcess = elemento.getAttribute('id');
             //console.log(sbNameProcess);
+            if(checked2 != this.id)
+                checked2   = this.id;
+            else
+                checked2   = '';
+            
+            if(checked2 == ''){
+                console.log("muestro message");
+                d3.select("#graphTask2").style("display","none");
+                d3.select("#messageTask2").style("display",null);
+            }else{
+                console.log("muestro grafica");
+                d3.select("#graphTask2").style("display",null);
+                d3.select("#messageTask2").style("display","none");
+            }
+            
             loadDataMeses(this.id);
-            console.log("aqui deberia de llamar a loadDataMeses() con el nuevo proceso ");
+            bar.merge(newBar).attr('opacity',function(d){if(("Proceso "+d.proceso) == checked2 || checked2 == '') return "1"; else return "0.1";});
         });
     }
 
