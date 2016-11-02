@@ -45,7 +45,7 @@
                 for (var i = 0; i < nuLength; i++) {
                     if (arData[i].Ano == metric) {
                         delete arData[i].Ano;
-                        delete arData[i].Proceso; 
+                        delete arData[i].Proceso;
                         return arData[i];
                     }                    
                 }
@@ -60,13 +60,14 @@
         nested = nested.filter(function(element){
             return element.value !== undefined;
         });
-
+        
         nested.forEach(function(d){
+            var proceso = d.key;
             d.age = Object.keys(d.value).map(function(key){
-                return {key:key, value:d.value[key]}
+                return {proceso: proceso,key:key, value:d.value[key]}
             })
         })
-
+        
         setSize(nested)
         drawAxis()
         drawChart(nested)    
@@ -163,6 +164,7 @@
         bar.merge(newBar)
             .attr("width", xInScale.bandwidth())
             .attr("height", 0)
+            .attr("id", function(d){return "Proceso "+d.proceso})
             .attr("fill", function(d) { return arColor(d.key); })
             .attr("transform", function(d) { return "translate(" + [xInScale(d.key), chartHeight] + ")" })
 
@@ -176,7 +178,7 @@
             });
 
         bar.merge(newBar).on("click", function () {
-            console.log("algo");
+            console.log(this.id);
             console.log(arguments);
         });
     }
