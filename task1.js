@@ -23,7 +23,6 @@
     var loadData = function() {
         metric = document.getElementById('metric').selectedOptions[0].text;
         d3.csv("Tarea1anos.csv", cast,  main)
-        console.log(metric);
     }
     
     function cast(d) {
@@ -156,7 +155,9 @@
         var bar = newCountry.selectAll(".barTasks")
             .data(function(d){ return d.age })
 
-        var newBar = bar.enter().append("rect").attr("class", "barTasks")
+        var newBar = bar.enter()
+                    .append("rect")
+                    .attr("class", "barTasks")
 
                         
         bar.merge(newBar)
@@ -173,6 +174,11 @@
             .text(function(d) {
                 return d.key + "\n" + formatNumber.new(d.value, "$");
             });
+
+        bar.merge(newBar).on("click", function () {
+            console.log("algo");
+            console.log(arguments);
+        });
     }
     
     function drawAxis(){
