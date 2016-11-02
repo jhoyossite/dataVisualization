@@ -442,7 +442,7 @@
                 .attr("class", "line")
                 .attr("d", function(d) { return line(d.values); })
                 .style("stroke", function(d) { return z2(d.key); })
-                .style("stroke-width","2");
+                .style("stroke-width","3.5");
         
         cityEnter.append('title').text(function(d){return "Nombre del proceso: \n"+d.key;});
         
