@@ -228,6 +228,10 @@
                         </select>
                     </div>
                 </div>
+                <div style="float:right;">
+                    <span><label>Nombre del proceso: </label></span>
+                    <span id="spant"></span>
+                </div>
                 <svg id="t2" width="1000" height="500"></svg> 
             </div>
         </div>
@@ -437,7 +441,18 @@
                 .append("path")
                 .attr("class", "line")
                 .attr("d", function(d) { return line(d.values); })
-                .style("stroke", function(d) { return z2(d.key); });
+                .style("stroke", function(d) { return z2(d.key); })
+                .style("stroke-width","2");
+        
+        cityEnter.append('title').text(function(d){return "Nombre del proceso: \n"+d.key;});
+        
+        cityEnter.on("mouseover", function(d) {
+            d3.select("#spant").text(d.key);
+        });
+        
+        cityEnter.on("mouseout", function(d) {
+            d3.select("#spant").text("");
+        });
         
         cityInit.exit().remove();
         
@@ -457,7 +472,9 @@
             .attr("x", 3)
             .attr("dy", "0.35em")
             .style("font", "10px sans-serif")
-            .text(function(d) {d3.select("#procesos").append("option").attr("value",d.id).text(d.id);return "";/*d.id;*/ });
+            .text(function(d) {d3.select("#procesos").append("option").attr("value",d.id).text(d.id);
+                               return "";/*d.id;*/ });
+
         
         // handle on click event
         d3.select('#procesos')
@@ -465,6 +482,7 @@
                 var value = this.value;
                 svg2.selectAll(".city path").remove();
                 svg2.selectAll(".city text").remove();
+                svg2.selectAll(".city title").remove();
                 if(value != '')
                     dataFiltered = data3.filter(function (d) { return d.key == value });
                 else
