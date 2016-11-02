@@ -208,11 +208,12 @@
             
         
                 
-        xScale.domain(nested.map(function(d) { return d.key }))
+        xScale.domain(nested.map(function(d) { return meses[d.key] }))
             .range([0, chartWidth]).paddingInner(0.1)
             
         
         var ageNames = Object.keys(nested[0].value)
+        
         
         xInScale.domain(ageNames).range([0, xScale.bandwidth()])
         
@@ -336,7 +337,7 @@
         
 
         contry.merge(newCountry)
-            .attr("transform", function(d) { return "translate(" + [xScale(d.key), 0] + ")"; });
+            .attr("transform", function(d) { return "translate(" + [xScale(meses[d.key]), 0] + ")"; });
 
         
         var bar = newCountry.selectAll(".barTasks")

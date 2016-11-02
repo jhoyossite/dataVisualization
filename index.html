@@ -187,14 +187,15 @@
             <div class="panel-heading">Task (Why)</div>
             <div class="panel-body">
                 <span>T.1 <b>Comparar</b> el presupuesto que se ha asignado (<b>Atributte</b>) a un proceso con el valor que se ha gastado realmente (<b>Attribute</b>)</span><br>
-                <span>T.1.1 <b>Comparar</b> el presupuesto que se ha asignado a cada uno de los procesos contra el valor que ha gastado durante un año especifico</b></span><br>
-                <span>T.1.2 <b>Comparar</b> el presupuesto que se ha asignado a un proceso contra el valor que ha gastado durante un año especifico</b></span><br>
+                <span>T.1.1 <b>Comparar</b> el presupuesto que se ha asignado a cada uno de los procesos contra el valor que ha gastado durante un año especifico</span><br>
+                <span>T.1.2 <b>Comparar</b> el presupuesto que se ha asignado a un proceso contra el valor que ha gastado durante un año especifico</span><br>
                 <span>T2. <b>Presentar</b> los <i>costos</i> (<b>Attribute</b>) por proceso (<b>Attribute</b>) en cada año.</span><br>
                 <span>T3. <b>Identificar</b> el <i>proceso</i> (<b>Attribute</b>) que más gasta (<b>Feature</b>) en subcontrataciones.</span><br>
-                <span>T4. <b>Presentar</b> la tendencia de los costos por proceso a lo largo del tiempo</span><br>
-                <span>T5. Mostrar costos por año</span></div>
+                <span>T4. <b>Comparar</b> el valor neto gastado por proceso en cada año</span>
+                <span>T5. <b>Presentar</b> la tendencia de los costos por proceso a lo largo del tiempo</span><br>
+                <span>T6. <b>Identificar</b> outliers de gastos para cado uno de los procesos basado en su tendencia</span>
         </div>
-        <span>Para el desarrollo de la T1 se plantea la siguiente visualización: <br><br></span>
+        <span>Para el desarrollo de la T1 y T2 se plantea la siguiente visualización: <br><br></span>
         <div class="panel panel-default col-md-12">
             <div class="selectdiv">
               <span>Seleccione un año para observar el valor presupuesto contra el gasto</span>
@@ -213,7 +214,7 @@
             <div class="panel-body" id="graphTask2">   
             </div>
         </div>
-        <span>Para el desarrollo de la T1 se plantea la siguiente visualización: <br><br></span>
+        <span>Para el desarrollo de la T3 y T4 se plantean la siguientes visualizaciónes: <br><br></span>
         <div class="panel panel-default col-md-12">
             <div class="panel-body">
                 <svg id="t1" width="1000" height="1000"></svg>
@@ -223,7 +224,7 @@
             <div class="panel-body" id="second">
             </div>
         </div>
-        <span>Para el desarrollo de la T2 se plantea la siguiente visualización: <br><br></span>
+        <span>Para el desarrollo de la T5 y T6 se plantea la siguiente visualización: <br><br></span>
         <div class="panel panel-default col-md-12">
             <div class="panel-body">
                 <div class="form-group col-md-12">
@@ -248,6 +249,19 @@
 <script src="utilitarios.js"></script>
 <script src="task1.js"></script>
 <script>
+    var meses = {"1": "Enero",
+                 "2": "Febrero",
+                 "3": "Marzo",
+                 "4": "Abril",
+                 "5": "Mayo",
+                 "6": "Junio",
+                 "7": "Julio",
+                 "8": "Agosto",
+                 "9": "Septiembre",
+                 "10": "Octubre",
+                 "11" : "Noviembre",
+                 "12" : "Diciembre"};
+    
     // Variables que se definen para el primer gráfico de barras que muestra el monto gastado por categoria
     var svg    = d3.select("#t1"),
         margin = {top: 20, right: 20, bottom: 30, left: 40},
