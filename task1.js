@@ -163,7 +163,7 @@
         
         var ageNames = Object.keys(nested[0].value)
         
-        xInScale.domain(ageNames).range([0, xScale.bandwidth()])
+        xInScale.domain(ageNames).range([0, xScale.bandwidth()]);
         
         var yMax = d3.max(nested.map(function(d){
             var values = Object.keys(d.value).map(function(key){
@@ -221,9 +221,9 @@
             
         
                 
-        xScale.domain(nested.map(function(d) { return meses[d.key] }))
+        xScale.domain(nested.sort(function(a, b) { 
+            return a.key - b.key; }).map(function(d) { return meses[d.key] }))
             .range([0, chartWidth]).paddingInner(0.1)
-            
         
         var ageNames = Object.keys(nested[0].value)
         
