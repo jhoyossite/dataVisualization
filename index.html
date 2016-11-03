@@ -191,7 +191,7 @@
                 <span>T.1.2 <b>Comparar</b> el presupuesto que se ha asignado a un proceso contra el valor que ha gastado durante un año especifico</span><br>
                 <span>T2. <b>Presentar</b> los <i>costos</i> (<b>Attribute</b>) por proceso (<b>Attribute</b>) en cada año.</span><br>
                 <span>T3. <b>Identificar</b> el <i>proceso</i> (<b>Attribute</b>) que más gasta (<b>Feature</b>) en subcontrataciones.</span><br>
-                <span>T4. <b>Comparar</b> el valor neto gastado por proceso en cada año</span>
+                <span>T4. <b>Comparar</b> el valor neto gastado por proceso en cada año</span><br>
                 <span>T5. <b>Presentar</b> la tendencia de los costos por proceso a lo largo del tiempo</span><br>
                 <span>T6. <b>Identificar</b> outliers de gastos para cado uno de los procesos basado en su tendencia</span>
             </div>
@@ -243,6 +243,20 @@
                     <span id="spant"></span>
                 </div>
                 <svg id="t2" width="1000" height="500"></svg> 
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading"><b>Modismos Usados -- How</b></div>
+            <div class="panel-body">Para cada una de las visualizaciones propuestas, se explicaran los marcadores y canales utilizados.<br><br>
+              La visualizacion T.1.1 muestra los costos en un año seleccionado por el usuario, para todos los procesos que se ajecutan en la empresa. Para ello, se usa un diagrama de barras agrupado, donde el eje X usa una escala categorica correspondiente al proceso, y en el eje Y usa una escala cuantitativa secuencial correspondiente a pesos colombianos. En la posicion X se aplicado <b>order,align y separate</b> y sobre la posicion Y un <b>express</b>. Se ha usado como marcadores las lineas, y como canales la posicion vertical para indicar la cantidad de dinero y el color para especificar el presupuesto y el valor real. Asi, se hace un <b>filter</b> para seleccionar los años que se desea ver.<br><br>
+
+              Para satisfacer la subtarea T.1.2, se hace uso de un modismo similar. Para construir dicha visualizacion, se hace un <b>select</b> sobre una de las barras de la visualizacion T.1.1 y se hace la transicion hacia la visualizacion T.1.2. Esta visualizacion permite compara el dinero presupuestado contra el realmente gastado durante un año para un proceso. En el eje X se una una escala categorica (meses de un año), y el eje Y usa una escala cuantitativa secuencial (pesos colombianos), generando asi la visualizacion con un <b>express</b> sobre la posicion Y y un <b>order,align y separate</b> en X. Se ha usado como marcadores lineas, y como canales la posicion vertical para indicar la cantidad de dinero y el color para especificar el presupuesto y el valor real.<br><br>
+
+              En la visualizacion correspondiente a la tarea T3, se ha usado  un diagrama de barras para identificar el proceso que mas costos genera. Se usa en el eje X las cantidades de dinero que correspoden a variables cuantitativas secuenciales y en el eje Y se usan variables categoricas asociadas a la identificacion de los procesos. En la posicion X se ha aplicado un <b>express</b>, mientras que en el eje Y se uso un <b>order,align y separate</b>. Se ha usado como marcadores lineas, y como canales la posicion horizontal para indicar la cantidad de dinero y el color para especificar el presupuesto y el valor real.<br><br>
+
+              Para la tarea T4, se quiere compara el valor neto gastado por cada proceso. Para ello se ha generado una visualizacion donde se usan  puntos como marcas, y como canales el tamaño de cada punto el cual esta relacionado con el valor neto gastado. Otro canal usado es el color que sirve para identificar el proceso. Se ha impreso texto sobre cada punto para identificar el valor neto del proceso.<br><br>
+
+              Para las tareas T5 y T6, se ha usado una serie de tiempo, la cual permite ver los costos a lo largo del tiempo por cada proceso. La vizualizacion permite inicialmente, ver el comportamiento de cada proceso, pero le brinda al usuario la posibilidad de ver uno segun sea su interes (<b>Filter</b>). La posicion X hace uso de una escala ordinal correspondiente a los meses y la posicion Y una escala cuantitativa secuencial (cantidad de dinero), aplicandose sobre cada una de ellas un <b>express</b>. Las marcas usadas fueron lineas y los canales empleados fueron el color para representar el proceso y asi mismo se uso la posicion X y Y para representar la posicion de los puntos.<br><br>
             </div>
         </div>
     </div>
