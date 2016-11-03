@@ -57,12 +57,12 @@
 
         <div class="panel panel-default">
             <div class="panel-heading"><b>Goal</b></div>
-            <div class="panel-body">Mostrar los costos de mantenimiento de la empresa de tal manera que se puedan tomar decisiones estratégicas en el comité de compras.</div>
+            <div class="panel-body">Mostrar los costos de mantenimiento de la empresa de tal manera que se puedan tomar decisiones estratégicas en el comité de compras.<br><br><b>Cliente:</b> Jefe de compras, a partir de las siguientes visualizaciones es posible encontrar novedades en los pagos realizados a los proveedores en los diferentes procesos, garantizando el cumplimiento de los presupuestos asociados a la compra de servicios, además de anticiparse a requerimientos futuros para el mantenimiento. <br><b>Usuario:</b> Analistas de Compra de Servicios.</div>
         </div>
         <div class="panel panel-default">
             <div class="panel-heading"><b>About the data (What)</b></div>
             <div class="panel-body"> Las bases de datos bajo estudio son tablas estaticas, cuyas filas estan relacionados con atributos especificos. A continuacion se muestra la descripcion de los mismos.<br>
-            <br>
+           
             <hr><b>Base de datos uno: Costos Causados</b><br><br>
               <div class="table-responsive">
                 <table class="table table-condensed">
@@ -142,7 +142,43 @@
                   </tbody>
                 </table>
               </div>
-            <hr><b>Base de datos dos: Presupuesto</b><br><br>
+            <hr><b>Base de datos dos: Seguimiento presupuesto por año</b><br><br>
+            <div class="table-responsive">
+                <table class="table table-condensed">
+                  <thead>
+                    <tr>
+                      <th>Nombre del Atributo</th>
+                      <th>Tipo de Atributo</th>
+                      <th>Descripción</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Procesos</td>
+                      <td>Categórico</td>
+                      <td>Determina a qué proceso de la empresa se ha cargado el costo causado</td>
+                    </tr>
+                    
+                    <tr>
+                      <td>Ano</td>
+                      <td>Cuantitativo Incremental</td>
+                      <td>Determina el año al que pertenece el valor del presupuesto.</td>
+                    </tr>
+                    <tr>
+                      <td>Presupuesto</td>
+                      <td>Cuantitativo Secuencial</td>
+                      <td>Es el valor en pesos ($) determinado en la planeación estrategica para cada combinación de año y proceso.</td>
+                    </tr>
+                    <tr>
+                      <td>Real</td>
+                      <td>Cuantitativo Secuencial</td>
+                      <td>Es el valor en pesos ($) determinado a partir de la suma de los registros causados por concepto de mantenimiento en cada proceso y en un determinado año.</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+             <hr><b>Base de datos tres: Seguimiento presupuesto por mes</b><br><br>
             <div class="table-responsive">
                 <table class="table table-condensed">
                   <thead>
@@ -159,32 +195,33 @@
                       <td>Determina a qué proceso de la empresa se ha cargado el costo causado</td>
                     </tr>
                     <tr>
-                      <td>Categoria</td>
-                      <td>Categórico</td>
-                      <td>Determina el tipo de mantenimiento realizado.</td>
-                    </tr>
-                    <tr>
                       <td>Mes</td>
                       <td>Cuantitativo Incremental</td>
-                      <td>Determina el número del mes a la que pertenece el valor del presupuesto.</td>
+                      <td>Determina el número del mes en el que pertencen los valores reales y presupuestados.</td>
                     </tr>
                     <tr>
                       <td>Ano</td>
                       <td>Cuantitativo Incremental</td>
-                      <td>Determina el año al que pertenece el valor del presupuesto.</td>
+                      <td>Determina el año al que pertencen los valores reales y presupuestados.</td>
                     </tr>
                     <tr>
                       <td>Presupuesto</td>
                       <td>Cuantitativo Secuencial</td>
-                      <td>Es el valor en pesos ($) determinado en la planeación estrategica para cada combinación de mes, año, proceso y categoría.</td>
+                      <td>Es el valor en pesos ($) determinado en la planeación estrategica para cada combinación de mes, año y proceso.</td>
+                    </tr>
+                    <tr>
+                      <td>Real</td>
+                      <td>Cuantitativo Secuencial</td>
+                      <td>Es el valor en pesos ($) determinado a partir de la suma de los registros causados por concepto de mantenimiento en cada proceso, en determinado mes y año.</td>
                     </tr>
                   </tbody>
                 </table>
               </div>
+
             </div>
         </div>
         <div class="panel panel-default">
-            <div class="panel-heading">Task (Why)</div>
+            <div class="panel-heading"><b>Task (Why)</b></div>
             <div class="panel-body">
                 <span>T.1 <b>Comparar</b> el presupuesto que se ha asignado (<b>Atributte</b>) a un proceso con el valor que se ha gastado realmente (<b>Attribute</b>)</span><br>
                 <span>T.1.1 <b>Comparar</b> el presupuesto que se ha asignado a cada uno de los procesos contra el valor que ha gastado durante un año especifico</span><br>
@@ -248,15 +285,15 @@
         <div class="panel panel-default">
             <div class="panel-heading"><b>Modismos Usados -- How</b></div>
             <div class="panel-body">Para cada una de las visualizaciones propuestas, se explicaran los marcadores y canales utilizados.<br><br>
-              La visualizacion T.1.1 muestra los costos en un año seleccionado por el usuario, para todos los procesos que se ajecutan en la empresa. Para ello, se usa un diagrama de barras agrupado, donde el eje X usa una escala categorica correspondiente al proceso, y en el eje Y usa una escala cuantitativa secuencial correspondiente a pesos colombianos. En la posicion X se aplicado <b>order,align y separate</b> y sobre la posicion Y un <b>express</b>. Se ha usado como marcadores las lineas, y como canales la posicion vertical para indicar la cantidad de dinero y el color para especificar el presupuesto y el valor real. Asi, se hace un <b>filter</b> para seleccionar los años que se desea ver.<br><br>
+              La visualizacion T.1.1 muestra los costos de mantenimiento en un año seleccionado por el usuario, para todos los procesos donde se realizan dichos mantenimientos. Para ello, se usa un diagrama de barras agrupado, donde el eje X usa una escala categórica correspondiente al proceso, y en el eje Y usa una escala cuantitativa secuencial correspondiente a pesos colombianos. En la posicion X se ha aplicado <b>order,align y separate</b> y sobre la posicion Y un <b>express</b>. Se ha usado como marcadores las lineas, y como canales la posición vertical para indicar la cantidad de dinero y el color para diferenciar el presupuesto del valor real. Asi, se hace un <b>filter</b> para seleccionar los años que se desea ver.<br><br>
 
-              Para satisfacer la subtarea T.1.2, se hace uso de un modismo similar. Para construir dicha visualizacion, se hace un <b>select</b> sobre una de las barras de la visualizacion T.1.1 y se hace la transicion hacia la visualizacion T.1.2. Esta visualizacion permite compara el dinero presupuestado contra el realmente gastado durante un año para un proceso. En el eje X se una una escala categorica (meses de un año), y el eje Y usa una escala cuantitativa secuencial (pesos colombianos), generando asi la visualizacion con un <b>express</b> sobre la posicion Y y un <b>order,align y separate</b> en X. Se ha usado como marcadores lineas, y como canales la posicion vertical para indicar la cantidad de dinero y el color para especificar el presupuesto y el valor real.<br><br>
+              Para satisfacer la subtarea T.1.2, se hace uso de un modismo similar. Para construir dicha visualizacion, se hace un <b>select</b> sobre una de las barras de la visualización T.1.1 y se hace la transición hacia la visualización T.1.2. Esta visualización permite comparar el dinero presupuestado contra el realmente gastado durante un año para un proceso. En el eje X se una una escala categórica (meses de un año), y el eje Y usa una escala cuantitativa secuencial (pesos colombianos), generando asi la visualización con un <b>express</b> sobre la posición Y y un <b>order,align y separate</b> en X. Se ha usado como marcadores lineas, y como canales la posición vertical para indicar la cantidad de dinero y el color para diferenciar el presupuesto del valor real.<br><br>
 
-              En la visualizacion correspondiente a la tarea T3, se ha usado  un diagrama de barras para identificar el proceso que mas costos genera. Se usa en el eje X las cantidades de dinero que correspoden a variables cuantitativas secuenciales y en el eje Y se usan variables categoricas asociadas a la identificacion de los procesos. En la posicion X se ha aplicado un <b>express</b>, mientras que en el eje Y se uso un <b>order,align y separate</b>. Se ha usado como marcadores lineas, y como canales la posicion horizontal para indicar la cantidad de dinero y el color para especificar el presupuesto y el valor real.<br><br>
+              En la visualización correspondiente a la tarea T3, se ha usado un diagrama de barras para identificar el proceso que mas costos genera. Se usa en el eje X las cantidades de dinero que correspoden a variables cuantitativas secuenciales y en el eje Y se usan variables categóricas asociadas a la identificación de los procesos. En la posición X se ha aplicado un <b>express</b>, mientras que en el eje Y se uso un <b>order,align y separate</b>. Se ha usado como marcadores lineas, y como canales la posicion horizontal para indicar la cantidad de dinero y el color para diferenciar el presupuesto del valor real.<br><br>
 
-              Para la tarea T4, se quiere compara el valor neto gastado por cada proceso. Para ello se ha generado una visualizacion donde se usan  puntos como marcas, y como canales el tamaño de cada punto el cual esta relacionado con el valor neto gastado. Otro canal usado es el color que sirve para identificar el proceso. Se ha impreso texto sobre cada punto para identificar el valor neto del proceso.<br><br>
+              Para la tarea T4, se quiere comparar el valor neto gastado por cada proceso. Para ello se ha generado una visualizacion donde se usan  puntos como marcas, y como canales el tamaño de cada punto el cual esta relacionado con el valor neto gastado. Otro canal usado es el color que sirve para identificar el proceso y texto para señalar el año al que hace referencia cada punto. Se ha impreso texto sobre cada punto para identificar el valor neto del proceso.<br><br>
 
-              Para las tareas T5 y T6, se ha usado una serie de tiempo, la cual permite ver los costos a lo largo del tiempo por cada proceso. La vizualizacion permite inicialmente, ver el comportamiento de cada proceso, pero le brinda al usuario la posibilidad de ver uno segun sea su interes (<b>Filter</b>). La posicion X hace uso de una escala ordinal correspondiente a los meses y la posicion Y una escala cuantitativa secuencial (cantidad de dinero), aplicandose sobre cada una de ellas un <b>express</b>. Las marcas usadas fueron lineas y los canales empleados fueron el color para representar el proceso y asi mismo se uso la posicion X y Y para representar la posicion de los puntos.<br><br>
+              Para las tareas T5 y T6, se ha usado una serie de tiempo, la cual permite ver los costos a lo largo del tiempo por cada proceso. La vizualización permite inicialmente, ver el comportamiento de cada proceso y detectar Outliers, pero además, le brinda al usuario la posibilidad de ver cada proceso particular (<b>Filter</b>). La posición X hace uso de una escala ordinal correspondiente a los meses y la posición Y una escala cuantitativa secuencial (cantidad de dinero), aplicandose sobre cada una de ellas un <b>express</b>. Las marcas usadas fueron lineas y los canales empleados fueron el color para representar el proceso y asi mismo se uso la posición X y Y para representar la posición de los puntos.<br><br>
             </div>
         </div>
     </div>
